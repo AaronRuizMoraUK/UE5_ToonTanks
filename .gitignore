@@ -13,7 +13,5 @@
 # Include Source code.
 !Source/
 
-# Ignore everything in Content folder except the content generated for CryptRaider project.
+# Include Content folder as it's quite small.
 !Content/
-Content/*
-!Content/ToonTanks
