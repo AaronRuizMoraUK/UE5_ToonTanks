@@ -9,7 +9,7 @@ public class ToonTanksTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V4;
-
-		ExtraModuleNames.AddRange( new string[] { "ToonTanks" } );
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
+        ExtraModuleNames.AddRange( new string[] { "ToonTanks" } );
 	}
 }
