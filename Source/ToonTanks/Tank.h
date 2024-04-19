@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BasePawn.h"
+#include "InputMappingContext.h"
 #include "Tank.generated.h"
 
 class USpringArmComponent;
@@ -18,10 +19,19 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
+	// Called to bind functionality to input
+	void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArm = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* Camera = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TSoftObjectPtr<UInputMappingContext> InputMapping;
+
+	//void Move(const FInputActionValue& Value);
+	void Move(const FInputActionInstance& Instance);
 };
