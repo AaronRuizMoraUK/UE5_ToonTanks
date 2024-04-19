@@ -32,6 +32,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TSoftObjectPtr<UInputMappingContext> InputMapping;
 
-	//void Move(const FInputActionValue& Value);
-	void Move(const FInputActionInstance& Instance);
+	void Move(const FInputActionInstance& Instance, int32 index);
 };

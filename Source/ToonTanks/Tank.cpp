@@ -83,12 +83,13 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 			return nullptr;
 		};
 
-	EnhancedInputComponent->BindAction(GetActionItem(TEXT("IA_MoveForward")), ETriggerEvent::Triggered, this, &ATank::Move);
+	EnhancedInputComponent->BindAction(GetActionItem(TEXT("IA_MoveForward")), ETriggerEvent::Triggered, this, &ATank::Move, 0);
+	EnhancedInputComponent->BindAction(GetActionItem(TEXT("IA_Turn")), ETriggerEvent::Triggered, this, &ATank::Move, 1);
 }
 
 //void ATank::Move(const FInputActionValue& Value)
-void ATank::Move(const FInputActionInstance& Instance)
+void ATank::Move(const FInputActionInstance& Instance, int32 index)
 {
 	auto MoveValue = Instance.GetValue().Get<float>();
-	UE_LOG(LogTemp, Display, TEXT("I'm moving!! %f"), MoveValue);
+	UE_LOG(LogTemp, Display, TEXT("I'm moving!! %f Index %d"), MoveValue, index);
 }
