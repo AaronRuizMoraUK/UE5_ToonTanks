@@ -71,7 +71,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 			auto* foundMapping = InputMappingData->GetMappings().FindByPredicate(
 				[&actionItemName](const FEnhancedActionKeyMapping& mapping)
 				{
-					return mapping.Action.GetName() == actionItemName;
+					return mapping.Action->GetName() == actionItemName;
 				});
 
 			if (foundMapping)
