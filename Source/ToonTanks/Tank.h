@@ -35,8 +35,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TSoftObjectPtr<UInputMappingContext> InputMapping;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	float Speed = 300.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	float TurnRate = 90.0f;
 
 private:
 	enum InputAction
@@ -53,6 +56,8 @@ private:
 	static const InputActionNameArray InputActionNames;
 
 	InputActionValueArray InputActionValues = InputActionValueArray(InPlace, 0.0f);
+
+	APlayerController* PlayerController = nullptr;
 
 	void UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex);
 };

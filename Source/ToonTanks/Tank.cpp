@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
+#include "DrawDebugHelpers.h"
 
 const ATank::InputActionNameArray ATank::InputActionNames =
 {
@@ -29,32 +30,33 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	// Load Input Mapping Context asset
-	if (InputMapping.IsNull())
+	auto* InputMappingData = InputMapping.LoadSynchronous();
+	if (!InputMappingData)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Input Mapping Context found!"));
+		UE_LOG(LogTemp, Warning, TEXT("No valid Input Mapping Context!"));
 		return;
 	}
-	auto* InputMappingData = InputMapping.LoadSynchronous();
+
+	// Obtain Player Controller
+	PlayerController = Cast<APlayerController>(GetController());
+	if (!PlayerController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No player controller found!"));
+		return;
+	}
 
 	// Add input mapping context to the input system.
 	bool bAddedInputMapping = false;
-	if (auto* PlayerController = GetLocalViewingPlayerController())
+	if (auto* LocalPlayer = Cast<ULocalPlayer>(PlayerController->Player))
 	{
-		if (auto* LocalPlayer = Cast<ULocalPlayer>(PlayerController->Player))
+		if (auto* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 		{
-			if (auto* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+			if (!InputSystem->HasMappingContext(InputMappingData))
 			{
-				if (!InputSystem->HasMappingContext(InputMappingData))
-				{
-					UE_LOG(LogTemp, Display, TEXT("Adding Input Mapping Context %s to player's input system!"), *InputMapping->GetName());
-					InputSystem->AddMappingContext(InputMappingData, 0);
-				}
-				else
-				{
-					UE_LOG(LogTemp, Display, TEXT("Input mapping %s already part of player's input system!"), *InputMapping->GetName());
-				}
-				bAddedInputMapping = true;
+				UE_LOG(LogTemp, Display, TEXT("Adding Input Mapping Context %s to player's input system!"), *InputMappingData->GetName());
+				InputSystem->AddMappingContext(InputMappingData, 0);
 			}
+			bAddedInputMapping = true;
 		}
 	}
 	if (!bAddedInputMapping)
@@ -97,24 +99,41 @@ void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	for (int32 i = 0; i < IA_Num; ++i)
+	if (PlayerController)
 	{
-		UE_LOG(LogTemp, Display, TEXT("- %.*s: %f"), InputActionNames[i].Len(), InputActionNames[i].GetData(), InputActionValues[i]);
+		FHitResult HitResult;
+		PlayerController->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), false/*TraceComplex*/, HitResult);
+		if (HitResult.bBlockingHit)
+		{
+			DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 50.0f, 20, FColor::Blue);
+		}
 	}
+
+	//for (int32 i = 0; i < IA_Num; ++i)
+	//{
+	//	UE_LOG(LogTemp, Display, TEXT("- %.*s: %f"), InputActionNames[i].Len(), InputActionNames[i].GetData(), InputActionValues[i]);
+	//}
 
 	const FVector DeltaLocation(
 		InputActionValues[IA_MoveForward] * Speed * DeltaTime,
-		InputActionValues[IA_Turn] * Speed * DeltaTime,
-		0.0f
+		0.0,
+		0.0
+	);
+
+	const FRotator DeltaRotation(
+		0.0,
+		InputActionValues[IA_Turn] * TurnRate * DeltaTime,
+		0.0
 	);
 
 	AddActorLocalOffset(DeltaLocation, true/*Sweep*/);
-}
+
+	AddActorLocalRotation(DeltaRotation, true/*Sweep*/);
+	}
 
 void ATank::UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex)
 {
-	auto Value = Instance.GetValue().Get<float>();
-	InputActionValues[InputIndex] = Value;
+	InputActionValues[InputIndex] = Instance.GetValue().Get<float>();
 
-	//UE_LOG(LogTemp, Display, TEXT("I'm moving!! %f Index %d"), Value, InputIndex);
+	//UE_LOG(LogTemp, Display, TEXT("Input triggered '%s' with value %.2f"), InputActionNames[InputIndex], InputActionValues[InputIndex]);
 }
