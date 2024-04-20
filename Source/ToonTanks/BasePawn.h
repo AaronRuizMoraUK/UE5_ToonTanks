@@ -18,6 +18,7 @@ public:
 	ABasePawn();
 
 protected:
+	void Fire();
 	void RotateTurret(FVector LookAtTarget, float DeltaTime);
 
 private:

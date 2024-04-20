@@ -46,12 +46,13 @@ private:
 	{
 		IA_MoveForward = 0,
 		IA_Turn,
+		IA_Fire,
 
 		IA_Num
 	};
 
 	using InputActionNameArray = FStringView[IA_Num];
-	using InputActionValueArray = TStaticArray<float, IA_Num>;
+	using InputActionValueArray = TStaticArray<FInputActionValue, IA_Num>;
 
 	static const InputActionNameArray InputActionNames;
 

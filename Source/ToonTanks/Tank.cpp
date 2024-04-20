@@ -11,7 +11,8 @@
 const ATank::InputActionNameArray ATank::InputActionNames =
 {
 	TEXT("IA_MoveForward"),
-	TEXT("IA_Turn")
+	TEXT("IA_Turn"),
+	TEXT("IA_Fire")
 };
 
 ATank::ATank()
@@ -94,6 +95,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	for (int32 i = 0; i < IA_Num; ++i)
 	{
 		EnhancedInputComponent->BindAction(GetActionItem(InputActionNames[i]), ETriggerEvent::Triggered, this, &ATank::UpdateInputs, i);
+		EnhancedInputComponent->BindAction(GetActionItem(InputActionNames[i]), ETriggerEvent::Completed, this, &ATank::UpdateInputs, i);
 	}
 }
 
@@ -115,29 +117,35 @@ void ATank::Tick(float DeltaTime)
 
 	//for (int32 i = 0; i < IA_Num; ++i)
 	//{
-	//	UE_LOG(LogTemp, Display, TEXT("- %.*s: %f"), InputActionNames[i].Len(), InputActionNames[i].GetData(), InputActionValues[i]);
+	//	UE_LOG(LogTemp, Display, TEXT("- %.*s: %f"), InputActionNames[i].Len(), InputActionNames[i].GetData(), InputActionValues[i].Get<float>());
 	//}
 
 	const FVector DeltaLocation(
-		InputActionValues[IA_MoveForward] * Speed * DeltaTime,
+		InputActionValues[IA_MoveForward].Get<float>() * Speed * DeltaTime,
 		0.0,
 		0.0
 	);
 
 	const FRotator DeltaRotation(
 		0.0,
-		InputActionValues[IA_Turn] * TurnRate * DeltaTime,
+		InputActionValues[IA_Turn].Get<float>() * TurnRate * DeltaTime,
 		0.0
 	);
 
 	AddActorLocalOffset(DeltaLocation, true/*Sweep*/);
 
 	AddActorLocalRotation(DeltaRotation, true/*Sweep*/);
+
+	if (InputActionValues[IA_Fire].Get<bool>())
+	{
+		Fire();
 	}
+}
 
 void ATank::UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex)
 {
-	InputActionValues[InputIndex] = Instance.GetValue().Get<float>();
+	InputActionValues[InputIndex] = Instance.GetValue();
 
-	//UE_LOG(LogTemp, Display, TEXT("Input triggered '%s' with value %.2f"), InputActionNames[InputIndex], InputActionValues[InputIndex]);
+	//UE_LOG(LogTemp, Display, TEXT("Input triggered '%.*s' with value %.2f"), 
+	//	InputActionNames[InputIndex].Len(), InputActionNames[InputIndex].GetData(), InputActionValues[InputIndex].Get<float>());
 }

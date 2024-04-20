@@ -23,6 +23,11 @@ ABasePawn::ABasePawn()
 	ProjectileSpawningPoint->SetupAttachment(TurretMesh);
 }
 
+void ABasePawn::Fire()
+{
+	DrawDebugSphere(GetWorld(), ProjectileSpawningPoint->GetComponentLocation(), 10.0f, 20, FColor::Red, false, 2.0f);
+}
+
 void ABasePawn::RotateTurret(FVector LookAtTarget, float DeltaTime)
 {
 	const FVector TargetVectorWorld = LookAtTarget - TurretMesh->GetComponentLocation();
