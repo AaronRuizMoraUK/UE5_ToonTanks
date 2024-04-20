@@ -26,6 +26,19 @@ public:
 	void Tick(float DeltaTime) override;
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* SpringArm = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* Camera = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TSoftObjectPtr<UInputMappingContext> InputMapping;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	float Speed = 300.0f;
+
+private:
 	enum InputAction
 	{
 		IA_MoveForward = 0,
@@ -40,15 +53,6 @@ private:
 	static const InputActionNameArray InputActionNames;
 
 	InputActionValueArray InputActionValues = InputActionValueArray(InPlace, 0.0f);
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* SpringArm = nullptr;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* Camera = nullptr;
-
-	UPROPERTY(EditAnywhere, Category = "Input")
-	TSoftObjectPtr<UInputMappingContext> InputMapping;
 
 	void UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex);
 };

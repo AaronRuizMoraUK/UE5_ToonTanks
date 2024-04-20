@@ -102,15 +102,13 @@ void ATank::Tick(float DeltaTime)
 		UE_LOG(LogTemp, Display, TEXT("- %.*s: %f"), InputActionNames[i].Len(), InputActionNames[i].GetData(), InputActionValues[i]);
 	}
 
-	const FVector2D Speed(300.0f, 200.0f);
-
-	FVector DeltaLocation(
-		InputActionValues[IA_MoveForward] * Speed.X * DeltaTime,
-		InputActionValues[IA_Turn] * Speed.Y * DeltaTime,
+	const FVector DeltaLocation(
+		InputActionValues[IA_MoveForward] * Speed * DeltaTime,
+		InputActionValues[IA_Turn] * Speed * DeltaTime,
 		0.0f
 	);
 
-	AddActorLocalOffset(DeltaLocation);
+	AddActorLocalOffset(DeltaLocation, true/*Sweep*/);
 }
 
 void ATank::UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex)
