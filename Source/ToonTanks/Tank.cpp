@@ -29,6 +29,13 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	auto* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (!EnhancedInputComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not using enhanced input component!"));
+		return;
+	}
+
 	// Load Input Mapping Context asset
 	auto* InputMappingData = InputMapping.LoadSynchronous();
 	if (!InputMappingData)
@@ -46,7 +53,6 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	}
 
 	// Add input mapping context to the input system.
-	bool bAddedInputMapping = false;
 	if (auto* LocalPlayer = Cast<ULocalPlayer>(PlayerController->Player))
 	{
 		if (auto* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
@@ -56,19 +62,16 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 				UE_LOG(LogTemp, Display, TEXT("Adding Input Mapping Context %s to player's input system!"), *InputMappingData->GetName());
 				InputSystem->AddMappingContext(InputMappingData, 0);
 			}
-			bAddedInputMapping = true;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No enhanced input local player subsystem found!"));
+			return;
 		}
 	}
-	if (!bAddedInputMapping)
+	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Input Mapping was not added to the player's input system!"));
-		return;
-	}
-
-	auto* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	if (!EnhancedInputComponent)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Not using enhanced input component!"));
+		UE_LOG(LogTemp, Warning, TEXT("No local player found!"));
 		return;
 	}
 
