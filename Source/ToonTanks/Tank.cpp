@@ -7,7 +7,6 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
-#include "DrawDebugHelpers.h"
 
 const ATank::InputActionNameArray ATank::InputActionNames =
 {
@@ -108,7 +107,9 @@ void ATank::Tick(float DeltaTime)
 		PlayerController->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), false/*TraceComplex*/, HitResult);
 		if (HitResult.bBlockingHit)
 		{
-			DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 50.0f, 20, FColor::Blue);
+			DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 20, FColor::Blue);
+
+			RotateTurret(HitResult.ImpactPoint, DeltaTime);
 		}
 	}
 
