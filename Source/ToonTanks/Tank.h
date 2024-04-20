@@ -22,7 +22,25 @@ public:
 	// Called to bind functionality to input
 	void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+	// Called every frame
+	void Tick(float DeltaTime) override;
+
 private:
+	enum InputAction
+	{
+		IA_MoveForward = 0,
+		IA_Turn,
+
+		IA_Num
+	};
+
+	using InputActionNameArray = FStringView[IA_Num];
+	using InputActionValueArray = TStaticArray<float, IA_Num>;
+
+	static const InputActionNameArray InputActionNames;
+
+	InputActionValueArray InputActionValues = InputActionValueArray(InPlace, 0.0f);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArm = nullptr;
 
@@ -32,5 +50,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TSoftObjectPtr<UInputMappingContext> InputMapping;
 
-	void Move(const FInputActionInstance& Instance, int32 index);
+	void UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex);
 };

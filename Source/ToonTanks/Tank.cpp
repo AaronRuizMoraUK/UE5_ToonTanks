@@ -8,6 +8,12 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
 
+const ATank::InputActionNameArray ATank::InputActionNames =
+{
+	TEXT("IA_MoveForward"),
+	TEXT("IA_Turn")
+};
+
 ATank::ATank()
 {
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Srpint Arm"));
@@ -15,8 +21,6 @@ ATank::ATank()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
-
-
 }
 
 // Called to bind functionality to input
@@ -83,13 +87,36 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 			return nullptr;
 		};
 
-	EnhancedInputComponent->BindAction(GetActionItem(TEXT("IA_MoveForward")), ETriggerEvent::Triggered, this, &ATank::Move, 0);
-	EnhancedInputComponent->BindAction(GetActionItem(TEXT("IA_Turn")), ETriggerEvent::Triggered, this, &ATank::Move, 1);
+	for (int32 i = 0; i < IA_Num; ++i)
+	{
+		EnhancedInputComponent->BindAction(GetActionItem(InputActionNames[i]), ETriggerEvent::Triggered, this, &ATank::UpdateInputs, i);
+	}
 }
 
-//void ATank::Move(const FInputActionValue& Value)
-void ATank::Move(const FInputActionInstance& Instance, int32 index)
+void ATank::Tick(float DeltaTime)
 {
-	auto MoveValue = Instance.GetValue().Get<float>();
-	UE_LOG(LogTemp, Display, TEXT("I'm moving!! %f Index %d"), MoveValue, index);
+	Super::Tick(DeltaTime);
+
+	for (int32 i = 0; i < IA_Num; ++i)
+	{
+		UE_LOG(LogTemp, Display, TEXT("- %.*s: %f"), InputActionNames[i].Len(), InputActionNames[i].GetData(), InputActionValues[i]);
+	}
+
+	const FVector2D Speed(300.0f, 200.0f);
+
+	FVector DeltaLocation(
+		InputActionValues[IA_MoveForward] * Speed.X * DeltaTime,
+		InputActionValues[IA_Turn] * Speed.Y * DeltaTime,
+		0.0f
+	);
+
+	AddActorLocalOffset(DeltaLocation);
+}
+
+void ATank::UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex)
+{
+	auto Value = Instance.GetValue().Get<float>();
+	InputActionValues[InputIndex] = Value;
+
+	//UE_LOG(LogTemp, Display, TEXT("I'm moving!! %f Index %d"), Value, InputIndex);
 }
