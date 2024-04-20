@@ -35,10 +35,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TSoftObjectPtr<UInputMappingContext> InputMapping;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float Speed = 300.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float TurnRate = 90.0f;
 
 private:
