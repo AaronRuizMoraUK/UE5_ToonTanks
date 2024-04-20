@@ -30,4 +30,12 @@ private:
 	ATank* Tank = nullptr;
 
 	FVector InitialAimingPoint = FVector::Zero();
+
+	FTimerHandle FireRateTimerHandle;
+
+	float FireRate = 2.0f;
+
+	void CheckFireCondition();
+
+	bool IsTankInFireRange() const;
 };
