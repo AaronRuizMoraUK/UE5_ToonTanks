@@ -4,6 +4,8 @@
 #include "Projectile.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -36,6 +38,22 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Display, TEXT("AProjectile::OnHit HitComp %s OtherActor %s OtherComp %s"), 
-		*HitComp->GetName(), *OtherActor->GetName(), *OtherComp->GetName());
+	//UE_LOG(LogTemp, Display, TEXT("AProjectile::OnHit HitComp %s OtherActor %s OtherComp %s"), 
+	//	*HitComp->GetName(), *OtherActor->GetName(), *OtherComp->GetName());
+
+	if (auto* ProjectileOwner = GetOwner();
+		ProjectileOwner && 
+		OtherActor && 
+		OtherActor != this && 
+		OtherActor != ProjectileOwner)
+	{
+		UGameplayStatics::ApplyDamage(
+			OtherActor, 
+			Damage,
+			ProjectileOwner->GetInstigatorController(),
+			this, 
+			UDamageType::StaticClass());
+
+		Destroy();
+	}
 }

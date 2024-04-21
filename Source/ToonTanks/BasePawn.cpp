@@ -29,7 +29,14 @@ void ABasePawn::Fire()
 {
 	if (ProjectileClass.Get())
 	{
-		GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawningPoint->GetComponentTransform());
+		if (auto* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawningPoint->GetComponentTransform()))
+		{
+			Projectile->SetOwner(this);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Unable to spawn projectile!"));
+		}
 	}
 	else
 	{
