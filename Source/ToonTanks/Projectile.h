@@ -7,6 +7,7 @@
 #include "Projectile.generated.h"
 
 class UStaticMeshComponent;
+class UProjectileMovementComponent;
 
 UCLASS()
 class TOONTANKS_API AProjectile : public AActor
@@ -26,6 +27,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UProjectileMovementComponent* ProjectileMovement = nullptr;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* ProjectileMesh = nullptr;
 };

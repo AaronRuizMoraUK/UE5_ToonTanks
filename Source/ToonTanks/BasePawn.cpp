@@ -2,6 +2,7 @@
 
 
 #include "BasePawn.h"
+#include "Projectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 
@@ -26,7 +27,14 @@ ABasePawn::ABasePawn()
 
 void ABasePawn::Fire()
 {
-	DrawDebugSphere(GetWorld(), ProjectileSpawningPoint->GetComponentLocation(), 10.0f, 20, FColor::Red, false, 2.0f);
+	if (ProjectileClass.Get())
+	{
+		GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawningPoint->GetComponentTransform());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ProjectileClass set to None"));
+	}
 }
 
 void ABasePawn::RotateTurret(FVector LookAtTarget, float DeltaTime)
