@@ -2,6 +2,7 @@
 
 
 #include "Tank.h"
+#include "ToonTanksPlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputComponent.h"
@@ -45,7 +46,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	}
 
 	// Obtain Player Controller
-	PlayerController = Cast<APlayerController>(GetController());
+	PlayerController = Cast<AToonTanksPlayerController>(GetController());
 	if (!PlayerController)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No player controller found!"));
@@ -153,11 +154,8 @@ void ATank::HandleDestruction()
 	// Disable the Tick function so it won't move.
 	SetActorTickEnabled(false);
 
-	// Disable the input
-	DisableInput(PlayerController);
-
-	// Do not show the mouse cursor
-	PlayerController->bShowMouseCursor = false;
+	// Disable player controller
+	PlayerController->SetPlayerEnabledState(false);
 
 	// TODO: Remember to re-enable all this?
 }

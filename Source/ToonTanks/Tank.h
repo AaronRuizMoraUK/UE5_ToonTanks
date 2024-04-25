@@ -9,6 +9,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class AToonTanksPlayerController;
 
 UCLASS()
 class TOONTANKS_API ATank : public ABasePawn
@@ -60,7 +61,7 @@ private:
 
 	InputActionValueArray InputActionValues = InputActionValueArray(InPlace, 0.0f);
 
-	APlayerController* PlayerController = nullptr;
+	AToonTanksPlayerController* PlayerController = nullptr;
 
 	void UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex);
 };
