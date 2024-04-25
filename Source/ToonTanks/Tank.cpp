@@ -17,7 +17,7 @@ const ATank::InputActionNameArray ATank::InputActionNames =
 
 ATank::ATank()
 {
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Srpint Arm"));
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(RootComponent);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -140,6 +140,26 @@ void ATank::Tick(float DeltaTime)
 	{
 		Fire();
 	}
+}
+
+void ATank::HandleDestruction()
+{
+	Super::HandleDestruction();
+
+	// Hide the tank instead of destroying it.
+	// This way it's still possessed and the camera still works.
+	SetActorHiddenInGame(true);
+
+	// Disable the Tick function so it won't move.
+	SetActorTickEnabled(false);
+
+	// Disable the input
+	DisableInput(PlayerController);
+
+	// Do not show the mouse cursor
+	PlayerController->bShowMouseCursor = false;
+
+	// TODO: Remember to re-enable all this?
 }
 
 void ATank::UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex)

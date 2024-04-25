@@ -25,6 +25,8 @@ public:
 	// Called every frame
 	void Tick(float DeltaTime) override;
 
+	void HandleDestruction() override;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArm = nullptr;

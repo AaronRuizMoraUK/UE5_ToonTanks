@@ -17,10 +17,11 @@ protected:
 	// Called when the game starts
 	void BeginPlay() override;
 
-
 public:
 	// Called every frame
 	void Tick(float DeltaTime) override;
+
+	void HandleDestruction() override;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))

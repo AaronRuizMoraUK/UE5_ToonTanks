@@ -32,6 +32,14 @@ void ATower::Tick(float DeltaTime)
 	}
 }
 
+void ATower::HandleDestruction()
+{
+	Super::HandleDestruction();
+
+	// Destroy tower
+	Destroy();
+}
+
 void ATower::CheckFireCondition()
 {
 	if (IsTankInFireRange())
@@ -42,5 +50,5 @@ void ATower::CheckFireCondition()
 
 bool ATower::IsTankInFireRange() const
 {
-	return Tank && FVector::Distance(GetActorLocation(), Tank->GetActorLocation()) <= FireRange;
+	return Tank && !Tank->IsHidden() && FVector::Distance(GetActorLocation(), Tank->GetActorLocation()) <= FireRange;
 }

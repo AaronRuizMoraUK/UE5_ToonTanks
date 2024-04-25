@@ -25,6 +25,11 @@ ABasePawn::ABasePawn()
 	ProjectileSpawningPoint->SetupAttachment(TurretMesh);
 }
 
+void ABasePawn::HandleDestruction()
+{
+	// TODO: Common destruction Visual/Sound effects
+}
+
 void ABasePawn::Fire()
 {
 	if (ProjectileClass.Get())

@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+class AToonTanksGameMode;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TOONTANKS_API UHealthComponent : public UActorComponent
@@ -33,4 +34,6 @@ private:
 
 private:
 	float Health = 0.0f;
+
+	AToonTanksGameMode* GameMode = nullptr;
 };
