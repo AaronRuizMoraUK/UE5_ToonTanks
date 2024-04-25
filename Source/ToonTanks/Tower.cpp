@@ -15,7 +15,7 @@ void ATower::BeginPlay()
 	InitialAimingPoint = GetActorLocation() + GetActorForwardVector();
 
 	// Set a timer to loop every FireRate seconds and call CheckFireCondition
-	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
+	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true/*loops*/);
 }
 
 void ATower::Tick(float DeltaTime)
@@ -35,6 +35,9 @@ void ATower::Tick(float DeltaTime)
 void ATower::HandleDestruction()
 {
 	Super::HandleDestruction();
+
+	// Invalidate the timer
+	FireRateTimerHandle.Invalidate();
 
 	// Destroy tower
 	Destroy();

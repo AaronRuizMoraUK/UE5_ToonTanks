@@ -6,6 +6,7 @@
 
 void AToonTanksPlayerController::SetPlayerEnabledState(bool bPlayerEnabled)
 {
+    // Disable inputs
     if (bPlayerEnabled)
     {
         GetPawn()->EnableInput(this);
@@ -15,5 +16,9 @@ void AToonTanksPlayerController::SetPlayerEnabledState(bool bPlayerEnabled)
         GetPawn()->DisableInput(this);
     }
 
+    // Disable the Tick function so no player logic is running
+    GetPawn()->SetActorTickEnabled(bPlayerEnabled);
+
+    // Show cursor while enabled
     bShowMouseCursor = bPlayerEnabled;
 }

@@ -18,6 +18,9 @@ const ATank::InputActionNameArray ATank::InputActionNames =
 
 ATank::ATank()
 {
+	// Pawn's tick will be enabled by player controller in SetPlayerEnabledState
+	PrimaryActorTick.bStartWithTickEnabled = false;
+
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(RootComponent);
 
@@ -110,7 +113,7 @@ void ATank::Tick(float DeltaTime)
 		PlayerController->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), false/*TraceComplex*/, HitResult);
 		if (HitResult.bBlockingHit)
 		{
-			DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 20, FColor::Blue);
+			//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 20, FColor::Blue);
 
 			RotateTurret(HitResult.ImpactPoint, DeltaTime);
 		}
@@ -151,13 +154,8 @@ void ATank::HandleDestruction()
 	// This way it's still possessed and the camera still works.
 	SetActorHiddenInGame(true);
 
-	// Disable the Tick function so it won't move.
-	SetActorTickEnabled(false);
-
 	// Disable player controller
 	PlayerController->SetPlayerEnabledState(false);
-
-	// TODO: Remember to re-enable all this?
 }
 
 void ATank::UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex)
