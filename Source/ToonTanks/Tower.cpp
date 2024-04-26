@@ -13,9 +13,6 @@ void ATower::BeginPlay()
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
 	InitialAimingPoint = GetActorLocation() + GetActorForwardVector();
-
-	// Set a timer to loop every FireRate seconds and call CheckFireCondition
-	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true/*doesLoop*/);
 }
 
 void ATower::Tick(float DeltaTime)
@@ -25,10 +22,21 @@ void ATower::Tick(float DeltaTime)
 	if (IsTankInFireRange())
 	{
 		RotateTurret(Tank->GetActorLocation(), DeltaTime);
+
+		if (!FireRateTimerHandle.IsValid())
+		{
+			// Set a timer to loop every FireRate seconds and call Fire
+			GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::Fire, FireRate, true/*doesLoop*/);
+		}
 	}
 	else
 	{
 		RotateTurret(InitialAimingPoint, DeltaTime);
+
+		if (FireRateTimerHandle.IsValid())
+		{
+			GetWorldTimerManager().ClearTimer(FireRateTimerHandle);
+		}
 	}
 }
 
@@ -43,15 +51,14 @@ void ATower::HandleDestruction()
 	Destroy();
 }
 
-void ATower::CheckFireCondition()
-{
-	if (IsTankInFireRange())
-	{
-		Fire();
-	}
-}
-
 bool ATower::IsTankInFireRange() const
 {
-	return Tank && !Tank->IsHidden() && FVector::Distance(GetActorLocation(), Tank->GetActorLocation()) <= FireRange;
+	if (Tank && !Tank->IsHidden())
+	{
+		FVector towerToTank =  Tank->GetActorLocation() - GetActorLocation();
+
+		return towerToTank.SquaredLength() <= FireRange * FireRange &&
+			FMath::Acos(towerToTank.GetSafeNormal().Dot(GetActorForwardVector())) <= FMath::DegreesToRadians(FireCone);
+	}
+	return false;
 }

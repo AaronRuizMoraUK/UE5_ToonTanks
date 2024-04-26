@@ -9,6 +9,7 @@
 class UCapsuleComponent;
 class AProjectile;
 class UParticleSystem;
+class USoundBase;
 
 UCLASS()
 class TOONTANKS_API ABasePawn : public APawn
@@ -43,4 +44,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	UParticleSystem* DeathParticles = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	USoundBase* DeathSound = nullptr;
 };
