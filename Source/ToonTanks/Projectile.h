@@ -10,6 +10,7 @@ class UStaticMeshComponent;
 class UProjectileMovementComponent;
 class UParticleSystem;
 class USoundBase;
+class UCameraShakeBase;
 
 UCLASS()
 class TOONTANKS_API AProjectile : public AActor
@@ -47,6 +48,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	USoundBase* HitSound = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<UCameraShakeBase> HitCameraShakeClass;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
