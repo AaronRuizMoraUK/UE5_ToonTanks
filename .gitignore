@@ -16,3 +16,6 @@
 
 # Include Content folder as it's quite small.
 !Content/
+
+# Ignore Built data for maps
+*_BuiltData.uasset
