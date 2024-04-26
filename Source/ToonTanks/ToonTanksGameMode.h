@@ -28,7 +28,7 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere)
-	float StartDelay = 3.0f;
+	float StartDelay = 4.0f;
 
 private:
 	AToonTanksPlayerController* PlayerController = nullptr;
