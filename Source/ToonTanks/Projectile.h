@@ -36,12 +36,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* TrailParticleSystem = nullptr;
-
 	UPROPERTY(EditAnywhere)
 	float Damage = 50.0f;
-
 	UPROPERTY(EditAnywhere)
-	UParticleSystem* HitParticles;
+	UParticleSystem* HitParticles = nullptr;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
