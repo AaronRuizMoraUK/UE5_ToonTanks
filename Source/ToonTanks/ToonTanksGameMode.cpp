@@ -30,14 +30,17 @@ void AToonTanksGameMode::HandleGameStart()
 {
     if (!PlayerController)
     {
+        UE_LOG(LogTemp, Warning, TEXT("AToonTanksGameMode has invalid player controller!"));
         return;
     }
 
     PlayerController->SetPlayerEnabledState(false);
 
+    // Send an event to trigger logic in blueprint.
+    StartGame();
+
     // Set a timer to kick off game
-    FTimerHandle TimerHandle;
-    GetWorldTimerManager().SetTimer(TimerHandle, 
+    GetWorldTimerManager().SetTimer(StartGameTimerHandle,
         [this]()
         {
             PlayerController->SetPlayerEnabledState(true);

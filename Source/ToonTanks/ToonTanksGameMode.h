@@ -20,6 +20,12 @@ protected:
 	// Called when the game starts
 	void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartGame();
+
+	UPROPERTY(BlueprintReadOnly)
+	FTimerHandle StartGameTimerHandle;
+
 private:
 	UPROPERTY(EditAnywhere)
 	float StartDelay = 3.0f;
