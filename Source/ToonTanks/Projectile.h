@@ -8,6 +8,7 @@
 
 class UStaticMeshComponent;
 class UProjectileMovementComponent;
+class UParticleSystem;
 
 UCLASS()
 class TOONTANKS_API AProjectile : public AActor
@@ -35,6 +36,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float Damage = 50.0f;
+
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* HitParticles;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

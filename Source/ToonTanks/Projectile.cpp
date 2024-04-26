@@ -41,19 +41,26 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	//UE_LOG(LogTemp, Display, TEXT("AProjectile::OnHit HitComp %s OtherActor %s OtherComp %s"), 
 	//	*HitComp->GetName(), *OtherActor->GetName(), *OtherComp->GetName());
 
-	if (auto* ProjectileOwner = GetOwner();
-		ProjectileOwner && 
-		OtherActor && 
-		OtherActor != this && 
-		OtherActor != ProjectileOwner)
+	if (OtherActor)
 	{
-		UGameplayStatics::ApplyDamage(
-			OtherActor, 
-			Damage,
-			ProjectileOwner->GetInstigatorController(),
-			this, 
-			UDamageType::StaticClass());
+		auto* ProjectileOwner = GetOwner();
 
-		Destroy();
+		// Ignore self hits
+		if (OtherActor == this ||
+			OtherActor == ProjectileOwner)
+		{
+			return;
+		}
+
+		UGameplayStatics::ApplyDamage(
+			OtherActor,
+			Damage,
+			ProjectileOwner ? ProjectileOwner->GetInstigatorController() : nullptr,
+			this,
+			UDamageType::StaticClass());
 	}
+
+	UGameplayStatics::SpawnEmitterAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
+
+	Destroy();
 }
