@@ -36,9 +36,9 @@ private:
 private:
 	AToonTanksPlayerController* PlayerController = nullptr;
 
-	void HandleGameStart();
-
 	int32 TargetTowers = -1;
+
+	void HandleGameStart();
 
 	int32 GetTargetTowerCount() const;
 };
