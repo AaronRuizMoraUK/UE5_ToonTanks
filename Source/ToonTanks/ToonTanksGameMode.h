@@ -12,7 +12,7 @@ UCLASS()
 class TOONTANKS_API AToonTanksGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
 public:
 	void ActorDied(AActor* DeadActor);
 
@@ -22,6 +22,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartGame();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void GameOver(bool bWonGame);
 
 	UPROPERTY(BlueprintReadOnly)
 	FTimerHandle StartGameTimerHandle;
@@ -34,4 +37,8 @@ private:
 	AToonTanksPlayerController* PlayerController = nullptr;
 
 	void HandleGameStart();
+
+	int32 TargetTowers = -1;
+
+	int32 GetTargetTowerCount() const;
 };

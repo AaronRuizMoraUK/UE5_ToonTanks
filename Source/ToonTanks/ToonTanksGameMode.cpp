@@ -3,18 +3,34 @@
 
 #include "ToonTanksGameMode.h"
 #include "BasePawn.h"
+#include "Tower.h"
 #include "ToonTanksPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
 void AToonTanksGameMode::ActorDied(AActor* DeadActor)
 {
-    // TODO: Update game logic
+    ABasePawn* DeadPawn = Cast<ABasePawn>(DeadActor);
+    if (!DeadPawn)
+    {
+        return;
+    }
+
+    // Win/Lose game logic
+    if (DeadPawn->IsPlayerControlled())
+    {
+        GameOver(false); // Lost game
+    }
+    else if (Cast<ATower>(DeadPawn))
+    {
+        --TargetTowers;
+        if (TargetTowers == 0)
+        {
+            GameOver(true); // Won game
+        }
+    }
 
     // Destroy pawn
-    if (ABasePawn* Pawn = Cast<ABasePawn>(DeadActor))
-    {
-        Pawn->HandleDestruction();
-    }
+    DeadPawn->HandleDestruction();
 }
 
 void AToonTanksGameMode::BeginPlay()
@@ -36,6 +52,8 @@ void AToonTanksGameMode::HandleGameStart()
 
     PlayerController->SetPlayerEnabledState(false);
 
+    TargetTowers = GetTargetTowerCount();
+
     // Send an event to trigger logic in blueprint.
     StartGame();
 
@@ -46,5 +64,12 @@ void AToonTanksGameMode::HandleGameStart()
             PlayerController->SetPlayerEnabledState(true);
         },
         StartDelay, 
-        false/*loops*/);
+        false/*doesLoop*/);
+}
+
+int32 AToonTanksGameMode::GetTargetTowerCount() const
+{
+    TArray<AActor*> Towers;
+    UGameplayStatics::GetAllActorsOfClass(this, ATower::StaticClass(), Towers);
+    return Towers.Num();
 }

@@ -15,7 +15,7 @@ void ATower::BeginPlay()
 	InitialAimingPoint = GetActorLocation() + GetActorForwardVector();
 
 	// Set a timer to loop every FireRate seconds and call CheckFireCondition
-	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true/*loops*/);
+	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true/*doesLoop*/);
 }
 
 void ATower::Tick(float DeltaTime)
