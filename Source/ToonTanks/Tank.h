@@ -28,6 +28,8 @@ public:
 
 	void HandleDestruction() override;
 
+	bool IsAlive() const;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* SpringArm = nullptr;
@@ -62,6 +64,8 @@ private:
 	InputActionValueArray InputActionValues = InputActionValueArray(InPlace, 0.0f);
 
 	AToonTanksPlayerController* PlayerController = nullptr;
+
+	bool bIsAlive = true;
 
 	void UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex);
 };

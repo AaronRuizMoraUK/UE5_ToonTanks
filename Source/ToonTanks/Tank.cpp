@@ -156,6 +156,13 @@ void ATank::HandleDestruction()
 
 	// Disable player controller
 	PlayerController->SetPlayerEnabledState(false);
+
+	bIsAlive = false;
+}
+
+bool ATank::IsAlive() const
+{
+	return bIsAlive;
 }
 
 void ATank::UpdateInputs(const FInputActionInstance& Instance, int32 InputIndex)

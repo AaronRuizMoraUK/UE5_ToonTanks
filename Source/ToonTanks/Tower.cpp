@@ -21,7 +21,7 @@ void ATower::Tick(float DeltaTime)
 
 	if (IsTankInFireRange())
 	{
-		RotateTurret(Tank->GetActorLocation(), DeltaTime);
+		RotateTurret(Tank->GetActorLocation(), DeltaTime, 10.0f);
 
 		if (!FireRateTimerHandle.IsValid())
 		{
@@ -31,7 +31,7 @@ void ATower::Tick(float DeltaTime)
 	}
 	else
 	{
-		RotateTurret(InitialAimingPoint, DeltaTime);
+		RotateTurret(InitialAimingPoint, DeltaTime, 5.0f);
 
 		if (FireRateTimerHandle.IsValid())
 		{
@@ -53,7 +53,7 @@ void ATower::HandleDestruction()
 
 bool ATower::IsTankInFireRange() const
 {
-	if (Tank && !Tank->IsHidden())
+	if (Tank && Tank->IsAlive())
 	{
 		FVector towerToTank =  Tank->GetActorLocation() - GetActorLocation();
 

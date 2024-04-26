@@ -30,14 +30,15 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	float FireCone = 90.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	float FireRate = 2.0f;
+
 private:
 	ATank* Tank = nullptr;
 
 	FVector InitialAimingPoint = FVector::Zero();
 
 	FTimerHandle FireRateTimerHandle;
-
-	float FireRate = 2.0f;
 
 	bool IsTankInFireRange() const;
 };
