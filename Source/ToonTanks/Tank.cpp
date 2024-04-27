@@ -33,6 +33,14 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Obtain Player Controller
+	PlayerController = Cast<AToonTanksPlayerController>(GetController());
+	if (!PlayerController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No player controller found!"));
+		return;
+	}
+
 	auto* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (!EnhancedInputComponent)
 	{
@@ -48,34 +56,15 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		return;
 	}
 
-	// Obtain Player Controller
-	PlayerController = Cast<AToonTanksPlayerController>(GetController());
-	if (!PlayerController)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No player controller found!"));
-		return;
-	}
-
 	// Add input mapping context to the input system.
-	if (auto* LocalPlayer = Cast<ULocalPlayer>(PlayerController->Player))
+	if (auto* InputSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
-		if (auto* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-		{
-			if (!InputSystem->HasMappingContext(InputMappingData))
-			{
-				UE_LOG(LogTemp, Display, TEXT("Adding Input Mapping Context %s to player's input system!"), *InputMappingData->GetName());
-				InputSystem->AddMappingContext(InputMappingData, 0);
-			}
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("No enhanced input local player subsystem found!"));
-			return;
-		}
+		InputSystem->ClearAllMappings();
+		InputSystem->AddMappingContext(InputMappingData, 0);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No local player found!"));
+		UE_LOG(LogTemp, Warning, TEXT("No enhanced input local player subsystem found!"));
 		return;
 	}
 
@@ -155,7 +144,10 @@ void ATank::HandleDestruction()
 	SetActorHiddenInGame(true);
 
 	// Disable player controller
-	PlayerController->SetPlayerEnabledState(false);
+	if (PlayerController)
+	{
+		PlayerController->SetPlayerEnabledState(false);
+	}
 
 	bIsAlive = false;
 }
